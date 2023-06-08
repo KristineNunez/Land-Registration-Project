@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Options from '../components/Options';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useContext, useEffect, useState } from "react";
+import Options from "../components/Options";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { connectWallet } from '../utils/wallet';
-import { useNavigate } from 'react-router-dom';
-import AccountContext from '../contexts/account-data';
-import ContractContext from '../contexts/contract-data';
-import Logo from '../components/Logo';
-import Spinner from '../components/Spinner';
+import { connectWallet } from "../utils/wallet";
+import { useNavigate } from "react-router-dom";
+import AccountContext from "../contexts/account-data";
+import ContractContext from "../contexts/contract-data";
+import Logo from "../components/Logo";
+import Spinner from "../components/Spinner";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -28,10 +28,10 @@ export default function Login() {
   useEffect(() => {
     console.log(account);
     if (account.authenticated) {
-      if (account.type === 'admin') {
-        navigate('/admin');
+      if (account.type === "admin") {
+        navigate("/admin");
       } else {
-        navigate('/');
+        navigate("/");
       }
     }
   }, [account, navigate]);
@@ -65,7 +65,7 @@ export default function Login() {
                   className="flex justify-center w-full px-4 py-2 font-medium tracking-wide transition-colors duration-200 transform border-2 rounded-full text-primary border-primary hover:bg-primary hover:text-white focus:outline-none focus:bg-primary"
                   onClick={connect}
                 >
-                  {loading ? <Spinner /> : '🌮 Connect'}
+                  {loading ? <Spinner /> : "🌮 Connect"}
                 </button>
               </div>
             </form>
