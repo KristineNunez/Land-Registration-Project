@@ -5,7 +5,7 @@ export const tezos = new TezosToolkit(`https://${network}.smartpy.io`);
 
 tezos.setWalletProvider(wallet);
 
-export const formatTezos = (amount, notation = 'compact') => {
+export default function formatTezos(amount, notation = 'compact') {
   const locale = 'en-US';
   const options = {
     style: 'currency',
@@ -24,4 +24,4 @@ export const formatTezos = (amount, notation = 'compact') => {
         return acc + part.value;
     }
   }, '');
-};
+}

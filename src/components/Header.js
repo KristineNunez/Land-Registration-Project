@@ -3,7 +3,7 @@ import AccountContext from '../contexts/account-data';
 import Dropdown from './Dropdown';
 import Logo from './Logo';
 import { getAccountBalance } from '../utils/operations';
-import { formatTezos } from '../utils/tezos';
+import formatTezos from '../utils/tezos';
 
 const Header = () => {
   const account = useContext(AccountContext);

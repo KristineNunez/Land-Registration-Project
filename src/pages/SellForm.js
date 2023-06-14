@@ -1,18 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import Options from "../components/Options";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { connectWallet } from "../utils/wallet";
-import { useNavigate } from "react-router-dom";
-import AccountContext from "../contexts/account-data";
-import ContractContext from "../contexts/contract-data";
-import Logo from "../components/Logo";
-import Spinner from "../components/Spinner";
+import { connectWallet } from '../utils/wallet';
+import { useNavigate } from 'react-router-dom';
+import AccountContext from '../contexts/account-data';
+import ContractContext from '../contexts/contract-data';
 
-import { NavLink } from "react-router-dom";
-import "../navbar.css";
-import { useForm } from "react-hook-form";
+import { NavLink } from 'react-router-dom';
+import '../navbar.css';
+import { useForm } from 'react-hook-form';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -20,7 +17,7 @@ export default function Landing() {
   const account = useContext(AccountContext);
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm();
-  const [data, setData] = useState("");
+  const [data, setData] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -33,16 +30,16 @@ export default function Landing() {
   useEffect(() => {
     console.log(account);
     if (account.authenticated) {
-      if (account.type === "admin") {
-        navigate("/admin");
+      if (account.type === 'admin') {
+        navigate('/admin');
       } else {
-        navigate("/");
+        navigate('/');
       }
     }
   }, [account, navigate]);
 
   const connect = async () => {
-    console.log("test");
+    console.log('test');
     setLoading(true);
     try {
       await connectWallet();
@@ -70,7 +67,7 @@ export default function Landing() {
         <div className="menu-icon" onClick={handleShowNavbar}>
           ☰
         </div>
-        <div className={`nav-elements  ${showNavbar && "active"}`}>
+        <div className={`nav-elements  ${showNavbar && 'active'}`}>
           <ul>
             <li>
               <NavLink to="/LandRegForm">Land Registration</NavLink>
@@ -114,19 +111,19 @@ export default function Landing() {
         <div className="form_header">Sell Form</div>
         <form onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}>
           <p>
-            {" "}
-            {"Registration Number: "}
+            {' '}
+            {'Registration Number: '}
             <input
-              {...register("registrationNumber")}
+              {...register('registrationNumber')}
               placeholder="Registration Number"
               required
             />
           </p>
           <p>
-            {" "}
-            {"Price: "}
+            {' '}
+            {'Price: '}
             <input
-              {...register("price")}
+              {...register('price')}
               placeholder="Price (Tezos)"
               type="number"
               required

@@ -1,58 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
-import Options from "../components/Options";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useContext, useEffect, useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import AccountContext from '../contexts/account-data';
+import ContractContext from '../contexts/contract-data';
 
-import { connectWallet } from "../utils/wallet";
-import { useNavigate } from "react-router-dom";
-import AccountContext from "../contexts/account-data";
-import ContractContext from "../contexts/contract-data";
-import Logo from "../components/Logo";
-import Spinner from "../components/Spinner";
-
-import { NavLink } from "react-router-dom";
-import "../navbar.css";
-import "../forms.css";
-import { useForm } from "react-hook-form";
+import { NavLink } from 'react-router-dom';
+import '../navbar.css';
+import '../forms.css';
+import { useForm } from 'react-hook-form';
 
 export default function LandRegForm() {
-  const navigate = useNavigate();
   const contract = useContext(ContractContext);
   const account = useContext(AccountContext);
-  const [loading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm();
-  const [data, setData] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      contract.fetchStorage();
-    })();
-    account.resetAccountData();
-  }, []);
-
+  const [data, setData] = useState('');
   // watch for changes in the account data context then navigate to dashboard if the user is authenticated and admin if the user is an admin
-  useEffect(() => {
-    console.log(account);
-    if (account.authenticated) {
-      if (account.type === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
-    }
-  }, [account, navigate]);
-
-  const connect = async () => {
-    console.log("test");
-    setLoading(true);
-    try {
-      await connectWallet();
-      await account.fetchAccountData(true, contract.storage);
-    } catch (error) {
-      toast.error(error.message);
-    }
-    setLoading(false);
-  };
 
   const [showNavbar, setShowNavbar] = useState(false);
 
@@ -71,7 +33,7 @@ export default function LandRegForm() {
         <div className="menu-icon" onClick={handleShowNavbar}>
           ☰
         </div>
-        <div className={`nav-elements  ${showNavbar && "active"}`}>
+        <div className={`nav-elements  ${showNavbar && 'active'}`}>
           <ul>
             <li>
               <NavLink to="/LandRegForm">Land Registration</NavLink>
@@ -116,9 +78,9 @@ export default function LandRegForm() {
         <div className="form_header">Land Registration Form</div>
         <form onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}>
           <p>
-            {"Land Size: "}
+            {'Land Size: '}
             <input
-              {...register("size")}
+              {...register('size')}
               placeholder="Size of Land (sq. m)"
               type="number"
               required
@@ -126,9 +88,9 @@ export default function LandRegForm() {
           </p>
 
           <p>
-            {"Tax Value: "}
+            {'Tax Value: '}
             <input
-              {...register("taxValue")}
+              {...register('taxValue')}
               placeholder="Tax Value (Tezos)"
               type="number"
               required
@@ -136,14 +98,14 @@ export default function LandRegForm() {
           </p>
 
           <p>
-            {"Location: "}
-            <input {...register("location")} placeholder="Location" required />
+            {'Location: '}
+            <input {...register('location')} placeholder="Location" required />
           </p>
 
           <p>
-            {"Image: "}
+            {'Image: '}
             <input
-              {...register("image")}
+              {...register('image')}
               placeholder="image"
               type="file"
               required

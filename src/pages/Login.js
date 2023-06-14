@@ -1,20 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
-import Options from "../components/Options";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { connectWallet } from "../utils/wallet";
-import { useNavigate } from "react-router-dom";
-import AccountContext from "../contexts/account-data";
-import ContractContext from "../contexts/contract-data";
-import Logo from "../components/Logo";
-import Spinner from "../components/Spinner";
+import { connectWallet } from '../utils/wallet';
+import { useNavigate } from 'react-router-dom';
+import AccountContext from '../contexts/account-data';
+import ContractContext from '../contexts/contract-data';
+import Spinner from '../components/Spinner';
+import '../navbar.css';
 
 export default function Login() {
   const navigate = useNavigate();
   const contract = useContext(ContractContext);
   const account = useContext(AccountContext);
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -24,19 +22,14 @@ export default function Login() {
     account.resetAccountData();
   }, []);
 
-  // watch for changes in the account data context then navigate to dashboard if the user is authenticated and admin if the user is an admin
   useEffect(() => {
-    console.log(account);
     if (account.authenticated) {
-      if (account.type === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
+      navigate('/dash');
     }
   }, [account, navigate]);
 
   const connect = async () => {
+    console.log('test');
     setLoading(true);
     try {
       await connectWallet();
@@ -48,33 +41,29 @@ export default function Login() {
   };
 
   return (
-    <div className="relative grid min-h-screen grid-cols-2 min-w-screen">
-      <div className="flex flex-col justify-center">
-        <div className="flex justify-center p-8">
-          <Logo />
-        </div>
-        <div className="flex flex-col items-center w-full max-w-screen-xl gap-4 px-4 py-8 mx-auto bg-white sm:px-6 lg:px-8">
-          <div className="flex flex-col w-full gap-4 px-8 py-10 bg-white border border-gray-200 rounded-xl lg:max-w-xl">
-            <h1 className="text-2xl font-medium text-center text-black">
-              Connect your wallet to continue
-            </h1>
-            <form>
-              <div className="mt-6">
-                <button
-                  type="button"
-                  className="flex justify-center w-full px-4 py-2 font-medium tracking-wide transition-colors duration-200 transform border-2 rounded-full text-primary border-primary hover:bg-primary hover:text-white focus:outline-none focus:bg-primary"
-                  onClick={connect}
-                >
-                  {loading ? <Spinner /> : "🌮 Connect"}
-                </button>
-              </div>
-            </form>
+    <main className="bg-[#8ad2ce] min-h-screen">
+      <div className="container">
+        <div className="grid content-center w-full min-h-screen grid-flow-col grid-cols-2 gap-2">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="text-4xl font-bold text-dark">
+              Land Registration Online
+            </div>
+            <div className="flex flex-col w-full gap-4 px-8 py-10 bg-white border border-gray-200 rounded-xl lg:max-w-xl">
+              <h2 className="text-2xl font-medium text-center text-black">
+                Connect your wallet to continue
+              </h2>
+              <button
+                type="button"
+                className="flex justify-center w-full px-4 py-2 text-xl font-medium tracking-wide transition-colors duration-200 transform border-2 rounded-full text-primary border-primary hover:bg-primary hover:text-white focus:outline-none focus:bg-primary"
+                onClick={connect}
+              >
+                {loading ? <Spinner /> : 'Connect'}
+              </button>
+            </div>
           </div>
+          <img src="/house.svg" alt="house" />
         </div>
       </div>
-      <div className="w-full h-full">
-        <img src="/abstract.png" alt="login" className="w-full h-full" />
-      </div>
-    </div>
+    </main>
   );
 }

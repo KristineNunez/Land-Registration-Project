@@ -1,20 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 body {
   margin: 0;
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   @apply text-content;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
@@ -40,70 +41,15 @@ code {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 8px;
-  @apply bg-secondary/10;
+  @apply bg-white/10;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-secondary/20;
+  @apply bg-white/20;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-body {
-  position: relative;
-  background: url("../public/bg.avif");
-  width: auto;
-  height: 100vh;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-
-.content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: -1;
-  width: 100%;
-  padding: 0 30px;
-  color: antiquewhite;
-}
-
-.content div {
-  font-size: 50px;
-  font-weight: 700;
-}
-
-.content_main {
-  text-shadow: 2px 2px black;
-}
-
-.form_content {
-  background-color: antiquewhite;
-  opacity: 95%;
-  min-height: 300px;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10vh;
-  padding: 20px;
-  font-size: medium;
-}
-
-.form_header {
-  font-size: xx-large;
-  padding-top: 1.5vh;
-  text-shadow: 2px 2px antiquewhite;
-  background-color: antiquewhite;
-  font-size: 40px;
-  font-weight: 500;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
 }

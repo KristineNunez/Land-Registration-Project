@@ -7,10 +7,11 @@ export const theme = {
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
-      primary: '#14a800',
+      primary: '#39b54a',
       secondary: '#13544e',
       accent: '#02fdaf',
-      content: 'hsl(113, 100%, 10%)',
+      content: '#282728',
+      dark: '#1c1b1c',
     },
   },
 };
@@ -30,4 +31,5 @@ export const plugins = [
       }
     );
   }),
+  require('@tailwindcss/container-queries'),
 ];

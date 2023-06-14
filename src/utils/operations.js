@@ -414,3 +414,40 @@ export const revertCommissionFunds = async (transactionId) => {
     );
   });
 };
+
+export const registerLand = async (metadata) => {
+  console.log(metadata);
+
+  const contract = await tezos.wallet.at(contractAddress);
+  const opEntry = contract.methodsObject
+    .register_land(metadata)
+    .toTransferParams({});
+  const estimate = await tezos.estimate.transfer(opEntry);
+
+  const op = await contract.methodsObject.register_land(metadata).send({
+    fee:
+      estimate.suggestedFeeMutez +
+      increasedFee(gasBuffer, Number(estimate.opSize)),
+    gasLimit: estimate.gasLimit + gasBuffer,
+    storageLimit: estimate.storageLimit,
+  });
+
+  await new Promise((resolve, reject) => {
+    const evts = [];
+
+    op.confirmationObservable(1).subscribe(
+      (event) => {
+        const entry = {
+          level: event.block.header.level,
+          currentConfirmation: event.currentConfirmation,
+        };
+        evts.push(entry);
+      },
+      () => reject(null),
+      () => {
+        toast.success('Transaction posted');
+        resolve(evts);
+      }
+    );
+  });
+};
