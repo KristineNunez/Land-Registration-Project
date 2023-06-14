@@ -24,7 +24,7 @@ export default function Login() {
 
   useEffect(() => {
     if (account.authenticated) {
-      navigate('/dash');
+      navigate('/');
     }
   }, [account, navigate]);
 
