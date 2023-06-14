@@ -1,9 +1,7 @@
-# CS 173 Mini-project 2: Task Chain, An Escrow Contract Project.
+# CS 173 Final Project: MetaLand, A Land Registration Platform on Tezos.
 
-### Author: Jarred Luzada
+### Author: Six Bomb
 
-### Contract Address: `KT1H2MCCacvQxweEbb5eonttpc83d7ru9Z3J`
+### Contract Address: `KT1WiAcsLzvhBvBaRTLxEjvDrxP7HF9pCFRb`
 
 ### Contract Deployment: Ghostnet
-
-### Dapp Link: https://task-chain.vercel.app/
