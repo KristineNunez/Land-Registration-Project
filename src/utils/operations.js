@@ -128,11 +128,11 @@ export const buyLand = async (token) => {
   const price = Number(token.price);
 
   const contract = await tezos.wallet.at(contractAddress);
+  const storage = await contract.storage();
   const opEntry = contract.methodsObject
     .buy_land(reg_num)
-    .toTransferParams({ amount: price, mutez: true });
+    .toTransferParams({ amount: price, mutez: true, source: storage.ledger[reg_num]});
   const estimate = await tezos.estimate.transfer(opEntry);
-
   const op = await contract.methodsObject.buy_land(reg_num).send({
     fee:
       estimate.suggestedFeeMutez +
@@ -141,6 +141,7 @@ export const buyLand = async (token) => {
     storageLimit: estimate.storageLimit,
     amount: price,
     mutez: true,
+    source: storage.ledger[reg_num]
   });
 
   await new Promise((resolve, reject) => {
@@ -202,11 +203,14 @@ export const addEncumbrance = async (data) => {
 };
 
 export const payLease = async (reg_num, amount) => {
-  var reg = Number(reg_num);
+  const reg = Number(reg_num);
+  const payment = Number(amount);
+
   const contract = await tezos.wallet.at(contractAddress);
-  const opEntry = contract.methodsObject.pay_lease(reg).toTransferParams({});
+  const opEntry = contract.methodsObject
+    .pay_lease(reg)
+    .toTransferParams({amount: payment, mutez: true});
   const estimate = await tezos.estimate.transfer(opEntry);
-  const storage = await contract.storage();
 
   const op = await contract.methodsObject.pay_lease(reg).send({
     fee:
@@ -214,9 +218,8 @@ export const payLease = async (reg_num, amount) => {
       increasedFee(gasBuffer, Number(estimate.opSize)),
     gasLimit: estimate.gasLimit + gasBuffer,
     storageLimit: estimate.storageLimit,
-    amount: amount,
-    source: storage.ledger[reg],
-    mutez: false,
+    amount: payment,
+    mutez: true,
   });
 
   await new Promise((resolve, reject) => {
@@ -240,11 +243,15 @@ export const payLease = async (reg_num, amount) => {
 };
 
 export const payMortgage = async (reg_num, amount) => {
-  var reg = Number(reg_num);
+  const reg = Number(reg_num);
+  const payment = Number(amount);
+
   const contract = await tezos.wallet.at(contractAddress);
-  const opEntry = contract.methodsObject.pay_mortgage(reg).toTransferParams({});
-  const estimate = await tezos.estimate.transfer(opEntry);
   const storage = await contract.storage();
+  const opEntry = contract.methodsObject
+    .pay_mortgage(reg)
+    .toTransferParams({amount: payment, mutez: true, source: storage.ledger[reg]});
+  const estimate = await tezos.estimate.transfer(opEntry);
 
   const op = await contract.methodsObject.pay_mortgage(reg).send({
     fee:
@@ -252,9 +259,9 @@ export const payMortgage = async (reg_num, amount) => {
       increasedFee(gasBuffer, Number(estimate.opSize)),
     gasLimit: estimate.gasLimit + gasBuffer,
     storageLimit: estimate.storageLimit,
-    amount: amount,
     source: storage.ledger[reg],
-    mutez: false,
+    amount: payment,
+    mutez: true,
   });
 
   await new Promise((resolve, reject) => {

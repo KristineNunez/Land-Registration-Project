@@ -11,13 +11,13 @@ const AddEncumbranceModal = React.forwardRef(({ closeModal }, ref) => {
   const [loading, setLoading] = useState(false);
 
   var d = new Date();
-  var datestring = d.getFullYear()  + "-" + ("0" + (d.getMonth()+1)).slice(-2) + "-" + ("0"+(d.getDate())).slice(-2) + "T" + d.getHours() + ":" + d.getMinutes() + ":"+ ("0"+(d.getSeconds())).slice(-2) + "Z";
+  var datestring = d.getFullYear()  + "-" + ("0" + (d.getMonth()+1)).slice(-2) + "-" + ("0"+(d.getDate())).slice(-2) + "T" + ("0"+(d.getHours())).slice(-2) + ":" + ("0"+(d.getMinutes())).slice(-2) + ":"+ ("0"+(d.getSeconds())).slice(-2) + "Z";
 
   const onSubmit = async (data) => {
     setLoading(true);
 
     const encumbrances = {
-      amount : Number(data.amount),
+      amount : data.amount,
       months : data.months,
       reg_num : data.reg_num, 
       date : datestring,

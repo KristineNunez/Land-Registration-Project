@@ -10,8 +10,8 @@ export default function Card({
   price,
   className = '',
   onClick,
-  encumbrance = 'Lease',
-  payment = '1.00',
+  encumbrance = '',
+  payment,
 }) {
   return (
     <div
@@ -52,7 +52,7 @@ export default function Card({
             )}
           </div>
         </div>
-        {encumbrance !== '' && (
+        {encumbrance !== '' && 
           <div className="p-2">
             <div className="flex flex-col gap-1 text-xs">
               <span className="text-xs text-white/40">
@@ -63,7 +63,7 @@ export default function Card({
               </span>
             </div>
           </div>
-        )}
+        }
       </div>
     </div>
   );
