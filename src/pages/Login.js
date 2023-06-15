@@ -29,7 +29,6 @@ export default function Login() {
   }, [account, navigate]);
 
   const connect = async () => {
-    console.log('test');
     setLoading(true);
     try {
       await connectWallet();

@@ -7,7 +7,7 @@ export const theme = {
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
-      primary: '#39b54a',
+      primary: '#1b5b24',
       secondary: '#13544e',
       accent: '#02fdaf',
       content: '#282728',
