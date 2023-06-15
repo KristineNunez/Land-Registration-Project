@@ -66,7 +66,6 @@ export default function Gallery() {
               encumbrances.map(item => {
                 if (item.key == token.token_id)
                 {
-                  console.log(item.value.type.length)
                   return item.value.type
                 }
               })
