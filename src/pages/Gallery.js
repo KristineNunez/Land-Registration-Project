@@ -4,12 +4,13 @@ import { Transition } from '@headlessui/react';
 
 import AddPropertyModal from '../components/AddPropertyModal';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { getTokens } from '../utils/storage';
+import { getTokens, getEncumbrance } from '../utils/storage';
 import getImageURL from '../utils/image';
 
 export default function Gallery() {
   const [addPropertyModalOpen, setAddPropetyModalOpen] = useState(false);
   const [tokens, setTokens] = useState([]);
+  const [encumbrances, setEncumbrance] = useState([]);
 
   const closeModal = () => {
     setAddPropetyModalOpen(false);
@@ -24,9 +25,15 @@ export default function Gallery() {
     setTokens(tokens);
   }, []);
 
+  const fetchEncumbrance = useCallback(async () => {
+    const encumbrances = await getEncumbrance();
+    setEncumbrance(encumbrances);
+  }, []);
+
   useEffect(() => {
     fetchTokens();
-  }, [fetchTokens]);
+    fetchEncumbrance();
+  }, [fetchTokens, fetchEncumbrance]);
 
   return (
     <>
@@ -46,13 +53,24 @@ export default function Gallery() {
         </div>
       </div>
       <div className="pb-6 grid grid-cols-1 gap-4 @6xl:grid-cols-5 @5xl:grid-cols-4 @3xl:grid-cols-3 @2xl:grid-cols-3 @lg:grid-cols-2">
-        {tokens.map((token) => (
+        {tokens.map((token)=> (
+
           <Card
             key={token.token_id}
             token_id={token.token_id}
             location={token.token_info.location}
             image={getImageURL(token.token_info.image)}
             tax_value={token.token_info.tax_value}
+            encumbrance =
+            {
+              encumbrances.map(item => {
+                if (item.key == token.token_id)
+                {
+                  console.log(item.value.type.length)
+                  return item.value.type
+                }
+              })
+            }
           />
         ))}
       </div>

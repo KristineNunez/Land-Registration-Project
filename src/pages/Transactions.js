@@ -3,12 +3,14 @@ import { PlusSmallIcon } from '@heroicons/react/24/outline';
 import { Transition } from '@headlessui/react';
 
 import RemovePropertyModal from '../components/RemovePropertyModal';
+import AddEncumbranceModal from '../components/AddEncumbranceModal';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { getTokens } from '../utils/storage';
 import getImageURL from '../utils/image';
 
 export default function Transactions() {
   const [removePropertyModalOpen, setRemovePropertyModalOpen] = useState(false);
+  const [addEncumbranceModalOpen, setAddEncumbranceModalOpen] = useState(false);
   const [tokens, setTokens] = useState([]);
 
   const closeModal = () => {
@@ -17,6 +19,14 @@ export default function Transactions() {
 
   const openModal = () => {
     setRemovePropertyModalOpen(true);
+  };
+
+  const closeModal1 = () => {
+    setAddEncumbranceModalOpen(false);
+  };
+
+  const openModal1 = () => {
+    setAddEncumbranceModalOpen(true);
   };
 
   const fetchTokens = useCallback(async () => {
@@ -44,6 +54,20 @@ export default function Transactions() {
           </button>
           <Transition appear show={removePropertyModalOpen} as={Fragment}>
             <RemovePropertyModal closeModal={closeModal} />
+          </Transition>
+        </div>
+
+        {/*Add Encumbrance = Apply for Lease and Mortgage*/}
+        <div>
+          <button
+            onClick={openModal1}
+            className="px-4 py-2 text-xs font-bold text-white rounded-lg bg-content hover:bg-[#1c1b1c/80]"
+          >
+            <PlusSmallIcon className="inline w-4 h-4 mr-1" />
+            Apply for Lease/Mortgage
+          </button>
+          <Transition appear show={addEncumbranceModalOpen} as={Fragment}>
+            <AddEncumbranceModal closeModal={closeModal1} />
           </Transition>
         </div>
     </>

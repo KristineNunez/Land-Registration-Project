@@ -169,3 +169,16 @@ export const getTokens = async () => {
     console.log(error);
   }
 };
+
+export const getEncumbrance = async () => {
+  try {
+    //Get only unburned tokens
+    const req = await axios.get(
+      `https://api.${network}.tzkt.io/v1/contracts/${contractAddress}/bigmaps/encumbrance/keys?active=true`
+    );
+    return req.data.map((token) => token);
+
+  } catch (error) {
+    console.log(error);
+  }
+};

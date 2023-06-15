@@ -9,6 +9,7 @@ export default function Card({
   tax_value = '1.00',
   title = 'Title',
   price = '1.00',
+  encumbrance = '',
 }) {
   return (
     <div className="border rounded-md overflow-clip bg-content border-white/10 min-h-[20rem]">
@@ -27,6 +28,14 @@ export default function Card({
             <span className="text-sm font-bold">{formatTezos(price)}</span>
           </div>
         </div>
+        {encumbrance.length>3 &&
+          <div className="p-2">
+                <div className="flex flex-col gap-1 text-xs">
+                  <span className="text-xs text-white/40">Encumbrance</span>
+                  <span className="text-sm font-bold">On {encumbrance}</span>
+                </div>
+          </div>
+        }
       </div>
     </div>
   );
