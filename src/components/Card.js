@@ -10,7 +10,7 @@ export default function Card({
   price,
   className = '',
   onClick,
-  encumbrance = 'Lease',
+  encumbrance = '',
   payment= "1.0",
 }) {
   return (

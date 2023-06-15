@@ -82,7 +82,7 @@ const AddEncumbranceModal = React.forwardRef(({ closeModal }, ref) => {
                     htmlFor="type"
                     className="block text-sm font-medium"
                   >
-                    Type:
+                    Type (Lease/Mortgage):
                   </label>
                   <input
                     {...register('type')}
@@ -96,7 +96,7 @@ const AddEncumbranceModal = React.forwardRef(({ closeModal }, ref) => {
 
                 <div>
                   <label htmlFor="months" className="block text-sm font-medium">
-                    Month/s:
+                    Number of Months:
                   </label>
                   <input
                     {...register('months')}

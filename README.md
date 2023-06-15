@@ -1,7 +1,7 @@
 # CS 173 Final Project: MetaLand, A Land Registration Platform on Tezos.
 
-### Author: Six Bomb
+### Author: Six Bombs
 
-### Contract Address: `KT1QEeyKWh9nf1goKRg6e4b29g5BNmi37apr`
+### Contract Address: `KT1BuRqYjh8YBbPoztyecFh5QhRL9EaiqP5c`
 
 ### Contract Deployment: Ghostnet

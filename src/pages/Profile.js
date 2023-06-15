@@ -78,6 +78,7 @@ export default function Profile() {
             location={token.location}
             image={getImageURL(token.image)}
             tax_value={token.tax_value}
+            size={token.size}
             onClick={() => setSelectedToken(token)}
             className={`cursor-pointer ${
               selectedToken?.id === token.id
@@ -98,6 +99,7 @@ export default function Profile() {
             location={token.location}
             image={getImageURL(token.image)}
             tax_value={token.tax_value}
+            size={token.size}
             price={token.price}
             className={`cursor-pointer ${
               selectedToken?.id === token.id

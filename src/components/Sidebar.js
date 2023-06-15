@@ -65,7 +65,7 @@ export default function Sidebar() {
           </button>
         </li>
         <div className="w-full h-px bg-white/10"></div>
-        <li>
+        {/*<li>
           <NavLink
             to="/"
             className={`flex items-center gap-4 p-2 uppercase rounded-lg hover:bg-black/40 ${
@@ -78,7 +78,7 @@ export default function Sidebar() {
             <ChartPieIcon className="h-8" />
             {showSidebar && <span className="">dashboard</span>}
           </NavLink>
-        </li>
+        </li>*/}
         <li>
           <NavLink
             to="/gallery"

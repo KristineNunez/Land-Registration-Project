@@ -85,7 +85,8 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         sp.for transfer in params:
             sp.for tx in transfer.txs:
                 sp.verify(self.data.token_metadata.contains(tx.token_id), 'FA2_TOKEN_UNDEFINED')
-                sp.verify((sp.source == transfer.from_) | (self.data.operators.contains(sp.record(operator = sp.source, owner = transfer.from_, token_id = tx.token_id))), 'FA2_NOT_OPERATOR')
+                #sp.verify((sp.source == transfer.from_) | (self.data.operators.contains(sp.record(operator = sp.source, owner = transfer.from_, token_id = tx.token_id))), 'FA2_NOT_OPERATOR')
+                sp.verify((self.data.ledger[tx.token_id] == transfer.from_) | (self.data.operators.contains(sp.record(operator = self.data.ledger[tx.token_id], owner = transfer.from_, token_id = tx.token_id))), 'FA2_NOT_OPERATOR')
                 sp.if tx.amount > 0:
                     sp.verify((tx.amount == 1) & (self.data.ledger[tx.token_id] == transfer.from_), 'FA2_INSUFFICIENT_BALANCE')
                     self.data.ledger[tx.token_id] = tx.to_
@@ -140,7 +141,8 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         sp.verify(sp.amount>=price, "NOT ENOUGH PAYMENT")
 
         #Send money to seller
-        sp.send(sp.source, price) 
+        #sp.send(sp.source, price) 
+        sp.send(self.data.ledger[reg_num], price) 
         
         #Return money to buyer if extra
         extra_amount = sp.amount - price
@@ -148,8 +150,9 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
             sp.send(sp.sender, extra_amount)
 
         #Transfer title to buyer
-        self.transfer_title(reg_num, [sp.record(from_ = sp.source, txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
-    
+        #self.transfer_title(reg_num, [sp.record(from_ = sp.source, txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
+        self.transfer_title(reg_num, [sp.record(from_ = self.data.ledger[reg_num], txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
+
         #Delete selling value
         del self.data.sell_value[reg_num]
 
@@ -204,7 +207,8 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         #If mortgage months is equal to 0, remove encumbrance and transfer title
         sp.if self.data.encumbrance[reg_num].months == 0:
             self.remove_encumbrance(reg_num)
-            self.transfer_title(reg_num, [sp.record(from_ = sp.source, txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
+            #self.transfer_title(reg_num, [sp.record(from_ = sp.source, txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
+            self.transfer_title(reg_num, [sp.record(from_ = self.data.ledger[reg_num], txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
 
 @sp.add_test(name = "landreg")
 def test():
@@ -253,3 +257,4 @@ sp.add_compilation_target("LandRegNFT",
         admin = sp.address("tz1Z86NrBAcC5vbLh5ewX46AnRf2wYFrEsCv"),
         metadata = sp.utils.metadata_of_url("ipfs://QmRbmXcd2yfNVdgHL7oYWS2yd3tztr2NZiqP2LFuw3voPW")
     ))
+

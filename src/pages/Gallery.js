@@ -34,7 +34,7 @@ export default function Gallery() {
     try {
       await buyLand(selectedToken);
     } catch (e) {
-      console.error(e);
+      alert(e);
     }
   };
 
@@ -85,6 +85,7 @@ export default function Gallery() {
             location={token.location}
             image={getImageURL(token.image)}
             tax_value={token.tax_value}
+            size={token.size}
             encumbrance={token.encumbrance}
             payment={token.amount}
           />
@@ -113,6 +114,7 @@ export default function Gallery() {
             image={getImageURL(token.image)}
             onClick={() => setSelectedToken(token)}
             tax_value={token.tax_value}
+            size={token.size}
             price={token.price}
             className={`cursor-pointer ${
               selectedToken?.id === token.id
