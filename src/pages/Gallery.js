@@ -82,9 +82,11 @@ export default function Gallery() {
           <Card
             key={token.token_id}
             token_id={token.token_id}
-            location={token.token_info.location}
-            image={getImageURL(token.token_info.image)}
-            tax_value={token.token_info.tax_value}
+            location={token.location}
+            image={getImageURL(token.image)}
+            tax_value={token.tax_value}
+            encumbrance={token.encumbrance}
+            payment={token.amount}
           />
         ))}
       </div>

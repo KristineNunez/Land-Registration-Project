@@ -150,21 +150,30 @@ export const getTokens = async () => {
     const req = await axios.get(
       `https://api.${network}.tzkt.io/v1/contracts/${contractAddress}/bigmaps/token_metadata/keys?active=true`
     );
+
     // convert bytes to char
-    const res = req.data.map((token) => {
-      token.value.token_info.size = bytes2Char(token.value.token_info.size);
-      token.value.token_info.image = bytes2Char(token.value.token_info.image);
-      token.value.token_info.location = bytes2Char(
-        token.value.token_info.location
-      );
-      token.value.token_info.tax_value = bytes2Char(
-        token.value.token_info.tax_value
-      );
+    const tokens = await Promise.all(
+      req.data.map(async (tokenId) => {
+        const req1 = await axios.get(
+          `https://api.${network}.tzkt.io/v1/contracts/${contractAddress}/bigmaps/encumbrance/keys/${tokenId.value.token_id}`
+        );
+        const res = {
+          token_id: tokenId.value.token_id,
+          key: tokenId.value.token_id,
+          size: bytes2Char(tokenId.value.token_info.size),
+          image: bytes2Char(tokenId.value.token_info.image),
+          location: bytes2Char(tokenId.value.token_info.location),
+          tax_value: bytes2Char(tokenId.value.token_info.tax_value),
+          encumbrance: req1.data.value.type,
+          amount: req1.data.value.amount
+        };
 
-      return token;
-    });
+        return res;
+      })
+    );
 
-    return res.map((token) => token.value);
+    return tokens;
+    
   } catch (error) {
     console.log(error);
   }

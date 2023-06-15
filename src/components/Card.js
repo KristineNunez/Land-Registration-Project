@@ -10,8 +10,8 @@ export default function Card({
   price,
   className = '',
   onClick,
-  encumbrance = '',
-  payment,
+  encumbrance = 'Lease',
+  payment= "1.0",
 }) {
   return (
     <div
