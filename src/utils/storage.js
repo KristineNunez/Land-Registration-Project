@@ -146,8 +146,9 @@ export const getUserTransactions = async (account) => {
 
 export const getTokens = async () => {
   try {
+    //Get only unburned tokens
     const req = await axios.get(
-      `https://api.${network}.tzkt.io/v1/contracts/${contractAddress}/bigmaps/token_metadata/keys`
+      `https://api.${network}.tzkt.io/v1/contracts/${contractAddress}/bigmaps/token_metadata/keys?active=true`
     );
     // convert bytes to char
     const res = req.data.map((token) => {

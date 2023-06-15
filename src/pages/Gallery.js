@@ -49,6 +49,7 @@ export default function Gallery() {
         {tokens.map((token) => (
           <Card
             key={token.token_id}
+            token_id={token.token_id}
             location={token.token_info.location}
             image={getImageURL(token.token_info.image)}
             tax_value={token.token_info.tax_value}
