@@ -1,14 +1,17 @@
 import {
   CurrencyBangladeshiIcon,
   PlusSmallIcon,
-  TagIcon,
 } from '@heroicons/react/24/outline';
 import Card from '../components/Card';
 import { Transition } from '@headlessui/react';
 
 import AddPropertyModal from '../components/AddPropertyModal';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { getSellingProperties, getTokens } from '../utils/storage';
+import {
+  getSellingProperties,
+  getTokens,
+  getEncumbrance,
+} from '../utils/storage';
 import getImageURL from '../utils/image';
 import { buyLand } from '../utils/operations';
 
@@ -17,6 +20,7 @@ export default function Gallery() {
   const [sellingProperites, setSellingProperties] = useState([]);
   const [tokens, setTokens] = useState([]);
   const [selectedToken, setSelectedToken] = useState(null);
+  const [encumbrances, setEncumbrance] = useState([]);
 
   const closeModal = () => {
     setAddPropetyModalOpen(false);
@@ -45,10 +49,16 @@ export default function Gallery() {
     setSellingProperties(properties);
   }, []);
 
+  const fetchEncumbrance = useCallback(async () => {
+    const encumbrances = await getEncumbrance();
+    setEncumbrance(encumbrances);
+  }, []);
+
   useEffect(() => {
     fetchProperties();
     fetchSellingProperties();
-  }, [fetchProperties, fetchSellingProperties]);
+    fetchEncumbrance();
+  }, [fetchProperties, fetchSellingProperties, fetchEncumbrance]);
 
   return (
     <>
@@ -68,7 +78,7 @@ export default function Gallery() {
         </div>
       </div>
       <div className="pb-6 grid grid-cols-1 gap-4 @6xl:grid-cols-5 @5xl:grid-cols-4 @3xl:grid-cols-3 @2xl:grid-cols-3 @lg:grid-cols-2">
-        {tokens.map((token) => (
+        {tokens?.map((token) => (
           <Card
             key={token.token_id}
             token_id={token.token_id}

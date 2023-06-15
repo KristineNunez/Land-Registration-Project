@@ -2,17 +2,29 @@ import { Dialog, Transition } from '@headlessui/react';
 import React, { Fragment, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { burnTitle } from '../utils/operations';
+import { addEncumbrance } from '../utils/operations';
 import Spinner from './Spinner';
 
-const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
+const AddEncumbranceModal = React.forwardRef(({ closeModal }, ref) => {
   const { register, handleSubmit } = useForm();
   const [data, setData] = useState('');
   const [loading, setLoading] = useState(false);
 
+  var d = new Date();
+  var datestring = d.getFullYear()  + "-" + ("0" + (d.getMonth()+1)).slice(-2) + "-" + ("0"+(d.getDate())).slice(-2) + "T" + d.getHours() + ":" + d.getMinutes() + ":"+ ("0"+(d.getSeconds())).slice(-2) + "Z";
+
   const onSubmit = async (data) => {
     setLoading(true);
-    await burnTitle(data.reg_num);
+
+    const encumbrances = {
+      amount : Number(data.amount),
+      months : data.months,
+      reg_num : data.reg_num, 
+      date : datestring,
+      type : data.type,
+    };
+
+    await addEncumbrance(encumbrances);
     setLoading(false);
 
     closeModal();
@@ -45,7 +57,7 @@ const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
           >
             <Dialog.Panel className="flex flex-col w-full max-w-md gap-4 p-6 overflow-hidden text-left text-white transition-all transform border-l shadow-xl border-white/10 bg-content">
               <Dialog.Title as="h3" className="text-lg font-medium leading-6">
-                Remove Land Registration
+                Apply for Lease/Mortgage
               </Dialog.Title>
 
               <form
@@ -65,12 +77,58 @@ const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
                   />
                 </div>
 
+                <div>
+                  <label
+                    htmlFor="type"
+                    className="block text-sm font-medium"
+                  >
+                    Type:
+                  </label>
+                  <input
+                    {...register('type')}
+                    placeholder="Type"
+                    type="text"
+                    name="type"
+                    className="text-content"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="months" className="block text-sm font-medium">
+                    Month/s:
+                  </label>
+                  <input
+                    {...register('months')}
+                    placeholder="Month/s"
+                    type="number"
+                    name="months"
+                    required
+                    className="text-content"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="amount" className="block text-sm font-medium">
+                    Amount:
+                  </label>
+                  <input
+                    {...register('amount')}
+                    placeholder="Amount (in tezos)"
+                    type="text"
+                    name="amount"
+                    required
+                    className="text-content"
+                  />
+                </div>
+
+
                 <button
                   type="button"
                   className="inline-flex justify-center px-4 py-2 mt-4 text-sm font-medium text-white border border-transparent bg-dark hover:bg-dark/80"
                   onClick={handleSubmit((data) => onSubmit(data))}
                 >
-                  {loading ? <Spinner /> : 'Remove Property'}
+                  {loading ? <Spinner /> : 'Transact'}
                 </button>
               </form>
               {data ?? 'a'}
@@ -82,4 +140,4 @@ const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
   );
 });
 
-export default RemovePropertyModal;
+export default AddEncumbranceModal;

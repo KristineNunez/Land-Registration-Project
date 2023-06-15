@@ -10,6 +10,8 @@ export default function Card({
   price,
   className = '',
   onClick,
+  encumbrance = 'Lease',
+  payment = '1.00',
 }) {
   return (
     <div
@@ -50,6 +52,18 @@ export default function Card({
             )}
           </div>
         </div>
+        {encumbrance !== '' && (
+          <div className="p-2">
+            <div className="flex flex-col gap-1 text-xs">
+              <span className="text-xs text-white/40">
+                Encumbrance (To Pay)
+              </span>
+              <span className="text-sm font-bold">
+                On {encumbrance} : {formatTezos(payment)}{' '}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

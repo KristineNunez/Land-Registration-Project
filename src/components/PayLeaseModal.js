@@ -2,17 +2,18 @@ import { Dialog, Transition } from '@headlessui/react';
 import React, { Fragment, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { burnTitle } from '../utils/operations';
+import { payLease } from '../utils/operations';
 import Spinner from './Spinner';
 
-const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
+const PayLeaseModal = React.forwardRef(({ closeModal }, ref) => {
   const { register, handleSubmit } = useForm();
   const [data, setData] = useState('');
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
     setLoading(true);
-    await burnTitle(data.reg_num);
+
+    await payLease(data.reg_num, data.amount);
     setLoading(false);
 
     closeModal();
@@ -45,16 +46,11 @@ const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
           >
             <Dialog.Panel className="flex flex-col w-full max-w-md gap-4 p-6 overflow-hidden text-left text-white transition-all transform border-l shadow-xl border-white/10 bg-content">
               <Dialog.Title as="h3" className="text-lg font-medium leading-6">
-                Remove Land Registration
+                Pay Lease
               </Dialog.Title>
-
-              <form
-                onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}
-              >
-                <div>
-                  <label htmlFor="reg_num" className="block text-sm font-medium">
-                    Registration Number:
-                  </label>
+              <form onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}>
+                <p>
+                  {'Registration Number: '}
                   <input
                     {...register('reg_num')}
                     placeholder="Registration Number"
@@ -63,14 +59,25 @@ const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
                     required
                     className="text-content"
                   />
-                </div>
-
+                </p>
+                <p>
+                  {'Amount to Pay: '}
+                  <input
+                    {...register('amount')}
+                    placeholder="Amount to Pay (Tezos)"
+                    type="text"
+                    name="amount"
+                    required
+                    className="text-content"
+                  />
+                </p>
+                <p>{data}</p>
                 <button
                   type="button"
                   className="inline-flex justify-center px-4 py-2 mt-4 text-sm font-medium text-white border border-transparent bg-dark hover:bg-dark/80"
                   onClick={handleSubmit((data) => onSubmit(data))}
                 >
-                  {loading ? <Spinner /> : 'Remove Property'}
+                  {loading ? <Spinner /> : 'Pay Lease'}
                 </button>
               </form>
               {data ?? 'a'}
@@ -82,4 +89,4 @@ const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
   );
 });
 
-export default RemovePropertyModal;
+export default PayLeaseModal;

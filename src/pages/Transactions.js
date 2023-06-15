@@ -3,30 +3,59 @@ import { PlusSmallIcon } from '@heroicons/react/24/outline';
 import { Transition } from '@headlessui/react';
 
 import RemovePropertyModal from '../components/RemovePropertyModal';
+import PayLeaseModal from '../components/PayLeaseModal';
+import PayMortgageModal from '../components/PayMortgageModal';
+import AddEncumbranceModal from '../components/AddEncumbranceModal';
+
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { getTokens } from '../utils/storage';
-import getImageURL from '../utils/image';
 
 export default function Transactions() {
   const [removePropertyModalOpen, setRemovePropertyModalOpen] = useState(false);
-  const [tokens, setTokens] = useState([]);
+  const [payLeaseModalOpen, setPayLeaseModalOpen] = useState(false);
+  const [payMortgageModalOpen, setPayMortgageModalOpen] = useState(false);
+  const [addEncumbranceModalOpen, setAddEncumbranceModalOpen] = useState(false);
+  //const [tokens, setTokens] = useState([]);
 
-  const closeModal = () => {
+  const closeRemovePropertyModal = () => {
     setRemovePropertyModalOpen(false);
   };
 
-  const openModal = () => {
+  const openRemovePropertyModal = () => {
     setRemovePropertyModalOpen(true);
   };
 
-  const fetchTokens = useCallback(async () => {
+  const closePayLeaseModal = () => {
+    setPayLeaseModalOpen(false);
+  };
+
+  const openPayLeaseModal = () => {
+    setPayLeaseModalOpen(true);
+  };
+
+  const closePayMortgageModal = () => {
+    setPayMortgageModalOpen(false);
+  };
+
+  const openPayMortgageModal = () => {
+    setPayMortgageModalOpen(true);
+  };
+
+  const closeModal1 = () => {
+    setAddEncumbranceModalOpen(false);
+  };
+
+  const openModal1 = () => {
+    setAddEncumbranceModalOpen(true);
+  };
+
+  /*const fetchTokens = useCallback(async () => {
     const tokens = await getTokens();
     setTokens(tokens);
   }, []);
 
   useEffect(() => {
     fetchTokens();
-  }, [fetchTokens]);
+  }, [fetchTokens]);*/
 
   return (
     <>
@@ -36,14 +65,56 @@ export default function Transactions() {
         {/*Remove property = Burn title*/}
         <div>
           <button
-            onClick={openModal}
+            onClick={openRemovePropertyModal}
             className="px-4 py-2 text-xs font-bold text-white rounded-lg bg-content hover:bg-[#1c1b1c/80]"
           >
             <PlusSmallIcon className="inline w-4 h-4 mr-1" />
             Remove Property
           </button>
           <Transition appear show={removePropertyModalOpen} as={Fragment}>
-            <RemovePropertyModal closeModal={closeModal} />
+            <RemovePropertyModal closeModal={closeRemovePropertyModal} />
+          </Transition>
+        </div>
+
+        {/*Pay lease*/}
+        <div>
+          <button
+            onClick={openPayLeaseModal}
+            className="px-4 py-2 text-xs font-bold text-white rounded-lg bg-content hover:bg-[#1c1b1c/80]"
+          >
+            <PlusSmallIcon className="inline w-4 h-4 mr-1" />
+            Pay Lease
+          </button>
+          <Transition appear show={payLeaseModalOpen} as={Fragment}>
+            <PayLeaseModal closeModal={closePayLeaseModal} />
+          </Transition>
+        </div>
+
+        {/*Pay mortgage*/}
+        <div>
+          <button
+            onClick={openPayMortgageModal}
+            className="px-4 py-2 text-xs font-bold text-white rounded-lg bg-content hover:bg-[#1c1b1c/80]"
+          >
+            <PlusSmallIcon className="inline w-4 h-4 mr-1" />
+            Pay Mortgage
+          </button>
+          <Transition appear show={payMortgageModalOpen} as={Fragment}>
+            <PayMortgageModal closeModal={closePayMortgageModal} />
+          </Transition>
+        </div>
+
+        {/*Add Encumbrance = Apply for Lease and Mortgage*/}
+        <div>
+          <button
+            onClick={openModal1}
+            className="px-4 py-2 text-xs font-bold text-white rounded-lg bg-content hover:bg-[#1c1b1c/80]"
+          >
+            <PlusSmallIcon className="inline w-4 h-4 mr-1" />
+            Apply for Lease/Mortgage
+          </button>
+          <Transition appear show={addEncumbranceModalOpen} as={Fragment}>
+            <AddEncumbranceModal closeModal={closeModal1} />
           </Transition>
         </div>
     </>

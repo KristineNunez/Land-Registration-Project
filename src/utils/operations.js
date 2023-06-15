@@ -202,23 +202,21 @@ export const addEncumbrance = async (data) => {
 };
 
 export const payLease = async (reg_num, amount) => {
-  console.log(reg_num);
-
+  var reg = Number(reg_num);
   const contract = await tezos.wallet.at(contractAddress);
-  const opEntry = contract.methodsObject
-    .pay_lease(reg_num)
-    .toTransferParams({});
+  const opEntry = contract.methodsObject.pay_lease(reg).toTransferParams({});
   const estimate = await tezos.estimate.transfer(opEntry);
   const storage = await contract.storage();
 
-  const op = await contract.methodsObject.pay_lease(reg_num).send({
+  const op = await contract.methodsObject.pay_lease(reg).send({
     fee:
       estimate.suggestedFeeMutez +
       increasedFee(gasBuffer, Number(estimate.opSize)),
     gasLimit: estimate.gasLimit + gasBuffer,
     storageLimit: estimate.storageLimit,
     amount: amount,
-    source: storage.ledger[reg_num],
+    source: storage.ledger[reg],
+    mutez: false,
   });
 
   await new Promise((resolve, reject) => {
@@ -242,23 +240,21 @@ export const payLease = async (reg_num, amount) => {
 };
 
 export const payMortgage = async (reg_num, amount) => {
-  console.log(reg_num);
-
+  var reg = Number(reg_num);
   const contract = await tezos.wallet.at(contractAddress);
-  const opEntry = contract.methodsObject
-    .pay_mortgage(reg_num)
-    .toTransferParams({});
+  const opEntry = contract.methodsObject.pay_mortgage(reg).toTransferParams({});
   const estimate = await tezos.estimate.transfer(opEntry);
   const storage = await contract.storage();
 
-  const op = await contract.methodsObject.pay_mortgage(reg_num).send({
+  const op = await contract.methodsObject.pay_mortgage(reg).send({
     fee:
       estimate.suggestedFeeMutez +
       increasedFee(gasBuffer, Number(estimate.opSize)),
     gasLimit: estimate.gasLimit + gasBuffer,
     storageLimit: estimate.storageLimit,
     amount: amount,
-    source: storage.ledger[reg_num],
+    source: storage.ledger[reg],
+    mutez: false,
   });
 
   await new Promise((resolve, reject) => {
