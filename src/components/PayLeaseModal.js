@@ -65,7 +65,7 @@ const PayLeaseModal = React.forwardRef(({ closeModal }, ref) => {
                   <input
                     {...register('amount')}
                     placeholder="Amount to Pay (Tezos)"
-                    type="number"
+                    type="text"
                     name="amount"
                     required
                     className="text-content"

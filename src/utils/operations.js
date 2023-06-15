@@ -207,10 +207,9 @@ export const addEncumbrance= async (data) => {
 
 export const payLease= async (reg_num, amount) => {
   var reg = Number(reg_num);
-  console.log(reg, Number(amount))
   const contract = await tezos.wallet.at(contractAddress);
   const opEntry = contract.methodsObject
-    .pay_lease(reg_num)
+    .pay_lease(reg)
     .toTransferParams({});
   const estimate = await tezos.estimate.transfer(opEntry);
   const storage = await contract.storage();
@@ -221,9 +220,9 @@ export const payLease= async (reg_num, amount) => {
       increasedFee(gasBuffer, Number(estimate.opSize)),
     gasLimit: estimate.gasLimit + gasBuffer,
     storageLimit: estimate.storageLimit,
-    amount: Number(amount),
+    amount: amount,
     source: storage.ledger[reg],
-    mutez: true
+    mutez: false
   });
 
   await new Promise((resolve, reject) => {
@@ -250,7 +249,7 @@ export const payMortgage= async (reg_num, amount) => {
   var reg = Number(reg_num);
   const contract = await tezos.wallet.at(contractAddress);
   const opEntry = contract.methodsObject
-    .pay_mortgage(reg_num)
+    .pay_mortgage(reg)
     .toTransferParams({});
   const estimate = await tezos.estimate.transfer(opEntry);
   const storage = await contract.storage();

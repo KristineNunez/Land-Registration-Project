@@ -9,7 +9,10 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         FA2.Admin.__init__(self, admin)
         FA2.BurnNft.__init__(self)
         self.update_initial_storage(
-            sell_value = sp.big_map({}, tkey = sp.TNat, tvalue = sp.TMutez),
+            sell_value = sp.big_map({}, tkey = sp.TNat, tvalue = sp.TRecord(
+                                        price = sp.TMutez,
+                                        owner = sp.TAddress
+                                        )),
             encumbrance = sp.big_map({}, tkey = sp.TNat, 
                                      tvalue = sp.TRecord(
                                          type = sp.TString,
@@ -114,13 +117,14 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         sp.verify(self.data.token_metadata.contains(reg_num), "LAND IS NOT REGISTERED")
 
         #Put price in a map
-        self.data.sell_value[reg_num] = price
+        self.data.sell_value[reg_num] = sp.record(price = price, owner = sp.sender)
+        
             
     #Buying land
     @sp.entry_point
     def buy_land(self, reg_num):
         #sp.sender - buyer, sp.source - seller
-        price = self.data.sell_value[reg_num]
+        price = self.data.sell_value[reg_num].price
         
         #Ensure that land is registered
         sp.verify(self.data.token_metadata.contains(reg_num), "LAND IS NOT REGISTERED")

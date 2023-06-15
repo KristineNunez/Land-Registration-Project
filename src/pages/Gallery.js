@@ -61,15 +61,8 @@ export default function Gallery() {
             location={token.token_info.location}
             image={getImageURL(token.token_info.image)}
             tax_value={token.token_info.tax_value}
-            encumbrance =
-            {
-              encumbrances.map(item => {
-                if (item.key == token.token_id)
-                {
-                  return item.value.type
-                }
-              })
-            }
+            encumbrance = {encumbrances[token.token_id].value.type}
+            payment = {encumbrances[token.token_id].value.amount}
           />
         ))}
       </div>

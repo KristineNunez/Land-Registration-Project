@@ -17,7 +17,7 @@ const AddEncumbranceModal = React.forwardRef(({ closeModal }, ref) => {
     setLoading(true);
 
     const encumbrances = {
-      amount : data.amount,
+      amount : Number(data.amount),
       months : data.months,
       reg_num : data.reg_num, 
       date : datestring,
@@ -115,7 +115,7 @@ const AddEncumbranceModal = React.forwardRef(({ closeModal }, ref) => {
                   <input
                     {...register('amount')}
                     placeholder="Amount (in tezos)"
-                    type="number"
+                    type="text"
                     name="amount"
                     required
                     className="text-content"
