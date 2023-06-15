@@ -50,14 +50,14 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
 
     @sp.entry_point
     #Add encumbrance (i.e. note lease, mortgage)
-    def add_encumbrance(self, reg_num, type, date, amount, liability, months):
+    def add_encumbrance(self, reg_num, type, date, amount, months):
         #One encumbrance at a time
         sp.verify(self.data.encumbrance[reg_num].type == "", "LAND ALREADY HAS ENCUMBRANCE")
 
         self.data.encumbrance[reg_num].type   = type
         self.data.encumbrance[reg_num].date   = date
         self.data.encumbrance[reg_num].amount = amount
-        self.data.encumbrance[reg_num].liability = sp.source
+        self.data.encumbrance[reg_num].liability = sp.sender
         self.data.encumbrance[reg_num].months = months
 
     #Remove encumbrance 
@@ -81,7 +81,7 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         sp.for transfer in params:
             sp.for tx in transfer.txs:
                 sp.verify(self.data.token_metadata.contains(tx.token_id), 'FA2_TOKEN_UNDEFINED')
-                sp.verify((sp.sender == transfer.from_) | (self.data.operators.contains(sp.record(operator = sp.sender, owner = transfer.from_, token_id = tx.token_id))), 'FA2_NOT_OPERATOR')
+                sp.verify((sp.source == transfer.from_) | (self.data.operators.contains(sp.record(operator = sp.source, owner = transfer.from_, token_id = tx.token_id))), 'FA2_NOT_OPERATOR')
                 sp.if tx.amount > 0:
                     sp.verify((tx.amount == 1) & (self.data.ledger[tx.token_id] == transfer.from_), 'FA2_INSUFFICIENT_BALANCE')
                     self.data.ledger[tx.token_id] = tx.to_
@@ -103,6 +103,7 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
                 sp.verify((action.amount == 1) & (self.data.ledger[action.token_id] == action.from_), 'FA2_INSUFFICIENT_BALANCE')
                 del self.data.ledger[action.token_id]
                 del self.data.token_metadata[action.token_id]
+                del self.data.encumbrance[action.token_id]
         
     #Selling land to display
     @sp.entry_point  
@@ -118,7 +119,7 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
     #Buying land
     @sp.entry_point
     def buy_land(self, reg_num):
-        #sp.sender - seller, sp.source - buyer
+        #sp.sender - buyer, sp.source - seller
         price = self.data.sell_value[reg_num]
         
         #Ensure that land is registered
@@ -128,13 +129,13 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         sp.verify(self.data.sell_value.contains(reg_num), "LAND IS NOT UP FOR SALE")
 
         #Ensure that buyer is not seller
-        sp.verify(self.data.ledger[reg_num]!=sp.source, "BUYER IS CURRENT OWNER OF LAND")
+        sp.verify(self.data.ledger[reg_num]!=sp.sender, "BUYER IS CURRENT OWNER OF LAND")
 
         #Ensure that payment is equal or greater than the price
         sp.verify(sp.amount>=price, "NOT ENOUGH PAYMENT")
 
         #Send money to seller
-        sp.send(sp.sender, price) 
+        sp.send(sp.source, price) 
         
         #Return money to buyer if extra
         extra_amount = sp.amount - price
@@ -142,7 +143,7 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
             sp.send(sp.sender, extra_amount)
 
         #Transfer title to buyer
-        self.transfer_title(reg_num, [sp.record(from_ = sp.sender, txs = [sp.record(to_= sp.source, amount= sp.nat(1), token_id=reg_num)])])
+        self.transfer_title(reg_num, [sp.record(from_ = sp.source, txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
     
         #Delete selling value
         del self.data.sell_value[reg_num]
@@ -176,10 +177,10 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
     #Pay mortgage
     @sp.entry_point
     def pay_mortgage(self, reg_num):
-        #sp.source -> loan person, sp.sender -> owner
+        #sp.source -> owner, sp.sender -> leasee
         
         #Check if loan person
-        sp.verify(sp.source == self.data.encumbrance[reg_num].liability, "NOT THE LOAN PERSON")
+        sp.verify(sp.sender == self.data.encumbrance[reg_num].liability, "NOT THE LOAN PERSON")
         
         #Check if amount is greater than or equal to pay
         sp.verify(sp.amount >= self.data.encumbrance[reg_num].amount, "NOT ENOUGH FOR PAYMENT")
@@ -190,7 +191,7 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         #Return money if extra
         extra_amount = sp.amount - self.data.encumbrance[reg_num].amount
         sp.if extra_amount > sp.tez(0):
-            sp.send(sp.source, extra_amount)
+            sp.send(sp.sender, extra_amount)
 
         #Minus months of mortgage
         self.data.encumbrance[reg_num].months = self.data.encumbrance[reg_num].months-1
@@ -198,7 +199,7 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
         #If mortgage months is equal to 0, remove encumbrance and transfer title
         sp.if self.data.encumbrance[reg_num].months == 0:
             self.remove_encumbrance(reg_num)
-            self.transfer_title(reg_num, [sp.record(from_ = sp.sender, txs = [sp.record(to_= sp.source, amount= sp.nat(1), token_id=reg_num)])])
+            self.transfer_title(reg_num, [sp.record(from_ = sp.source, txs = [sp.record(to_= sp.sender, amount= sp.nat(1), token_id=reg_num)])])
 
 @sp.add_test(name = "landreg")
 def test():
@@ -230,42 +231,16 @@ def test():
     nft.sell_land(reg_num = 1, price = sp.tez(10)).run(sender=bob)
     nft.sell_land(reg_num = 0, price = sp.tez(20)).run(sender=alice)
     
-    nft.buy_land(0).run(sender = alice, amount = sp.tez(30), source = bob)
+    nft.buy_land(0).run(sender = bob, amount = sp.tez(30), source = alice)
     
-    nft.add_encumbrance(reg_num= 1, type = "lease", date= sp.now, amount= sp.tez(5), months = sp.int(1)).run(sender=bob, source=carol)
-    nft.pay_lease(1).run(sender=carol, amount= sp.tez(5))
+    nft.add_encumbrance(reg_num= 1, type = "lease", date= sp.now, amount= sp.tez(5), months = sp.int(1)).run(sender=carol, source=bob)
+    nft.pay_lease(1).run(sender=carol, source = bob, amount= sp.tez(5))
     
-    nft.add_encumbrance(reg_num= 0, type = "mortgage", date= sp.now, amount= sp.tez(6), months = sp.int(1)).run(sender=bob, source=carol)
-    nft.pay_mortgage(0).run(source = carol, sender = bob, amount= sp.tez(6))
-
-@sp.add_test(name = "landreg2")
-def test2():
-    scenario = sp.test_scenario()
-    scenario.h1("Land Registration 2")
-
-    admin = sp.test_account("Admin")
-    alice = sp.test_account("Alice")
-    bob = sp.test_account("Bob")
-    carol = sp.test_account("Carol")
-
-    nft = LandRegNFT(
-        admin = admin.address,
-        metadata = sp.utils.metadata_of_url("http://example.com")
-    )
-
-    scenario+=nft
-    
-    nft.register_land(size = "18", 
-            tax_value = "3", 
-            loc = "Pasay City",
-            image = "ipfs://QmRbmXcd2yfNVdgHL7oYWS2yd3tztr2NZiqP2LFuw3voPW").run(sender=alice)
-    nft.register_land(size = "40", 
-            tax_value = "10",  
-            loc = "Pasay City",
-            image = "ipfs://QmRbmXcd2yfNVdgHL7oYWS2yd3tztr2NZiqP2LFuw3voPW").run(sender=bob)
+    nft.add_encumbrance(reg_num= 0, type = "mortgage", date= sp.now, amount= sp.tez(6), months = sp.int(1)).run(sender=carol, source=bob)
+    nft.pay_mortgage(0).run(source = bob, sender = carol, amount= sp.tez(6))
 
     #Burn tests
-    nft.burn_title(sp.nat(0)).run(sender=alice)
+    nft.burn_title(sp.nat(0)).run(sender=carol)
     nft.burn_title(sp.nat(1)).run(sender=bob)
 
 sp.add_compilation_target("LandRegNFT",
