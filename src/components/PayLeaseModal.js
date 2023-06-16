@@ -13,7 +13,12 @@ const PayLeaseModal = React.forwardRef(({ closeModal }, ref) => {
   const onSubmit = async (data) => {
     setLoading(true);
 
-    await payLease(data.reg_num, data.amount);
+    try {
+      await payLease(data.reg_num, data.amount);
+    } catch (e) {
+      alert(e)
+    }
+
     setLoading(false);
 
     closeModal();

@@ -24,7 +24,12 @@ const AddEncumbranceModal = React.forwardRef(({ closeModal }, ref) => {
       type : data.type,
     };
 
-    await addEncumbrance(encumbrances);
+    try {
+      await addEncumbrance(encumbrances);
+    } catch (e) {
+      alert(e)
+    }
+
     setLoading(false);
 
     closeModal();
