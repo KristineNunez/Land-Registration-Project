@@ -16,7 +16,13 @@ const SellPropertyModal = React.forwardRef(({ closeModal, token }, ref) => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    await sellLand(data);
+
+    try {
+      await sellLand(data);
+    } catch (e) {
+      alert(e);
+    }
+
     setLoading(false);
     closeModal();
   };

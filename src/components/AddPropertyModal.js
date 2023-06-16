@@ -13,16 +13,22 @@ const AddPropertyModal = React.forwardRef(({ closeModal }, ref) => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    const ipfsHash = await mint(data.image);
 
-    const metadata = {
-      size: data.size,
-      loc: data.location,
-      tax_value: data.taxValue,
-      image: `ipfs://${ipfsHash}`,
-    };
+    try {
+      const ipfsHash = await mint(data.image);
 
-    await registerLand(metadata);
+      const metadata = {
+        size: data.size,
+        loc: data.location,
+        tax_value: data.taxValue,
+        image: `ipfs://${ipfsHash}`,
+      };
+
+      await registerLand(metadata);
+    } catch (e) {
+      alert(e);
+    }
+
     setLoading(false);
 
     closeModal();

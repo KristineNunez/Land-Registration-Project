@@ -12,7 +12,13 @@ const RemovePropertyModal = React.forwardRef(({ closeModal }, ref) => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    await burnTitle(data.reg_num);
+
+    try {
+      await burnTitle(data.reg_num);
+    } catch (e) {
+      alert(e);
+    }
+
     setLoading(false);
 
     closeModal();

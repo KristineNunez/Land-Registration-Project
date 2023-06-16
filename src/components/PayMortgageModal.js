@@ -13,7 +13,12 @@ const PayMortgageModal = React.forwardRef(({ closeModal }, ref) => {
   const onSubmit = async (data) => {
     setLoading(true);
 
-    await payMortgage(data.reg_num, data.amount);
+    try {
+      await payMortgage(data.reg_num, data.amount);
+    } catch (e) {
+      alert(e);
+    }
+
     setLoading(false);
 
     closeModal();
