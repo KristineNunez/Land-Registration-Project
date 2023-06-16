@@ -2,7 +2,7 @@
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { toast } from 'react-toastify';
 
-export const contractAddress = 'KT1BuRqYjh8YBbPoztyecFh5QhRL9EaiqP5c';
+export const contractAddress = 'KT19xPpFu7Mug7LHZL7HFeZNE61Bd7ETPCdZ';
 export const network = 'ghostnet';
 
 export const wallet = new BeaconWallet({

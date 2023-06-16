@@ -160,6 +160,9 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
     @sp.entry_point
     def pay_lease(self, reg_num):
         #sp.sender -> leessee
+
+        #Ensure encumbrance exists
+        sp.verify(self.data.encumbrance[reg_num].type != "", "LAND HAS NO EXISTING ENCUMBRANCE")
         
         #Check if lessee
         sp.verify(sp.sender == self.data.encumbrance[reg_num].liability, "NOT THE LESSEE")
@@ -186,6 +189,9 @@ class LandRegNFT(FA2.Admin, FA2.Fa2Nft, FA2.BurnNft):
     @sp.entry_point
     def pay_mortgage(self, reg_num):
         #sp.source -> owner, sp.sender -> leasee
+
+        #Ensure encumbrance exists
+        sp.verify(self.data.encumbrance[reg_num].type != "", "LAND HAS NO EXISTING ENCUMBRANCE")
         
         #Check if loan person
         sp.verify(sp.sender == self.data.encumbrance[reg_num].liability, "NOT THE LOAN PERSON")
@@ -257,4 +263,3 @@ sp.add_compilation_target("LandRegNFT",
         admin = sp.address("tz1Z86NrBAcC5vbLh5ewX46AnRf2wYFrEsCv"),
         metadata = sp.utils.metadata_of_url("ipfs://QmRbmXcd2yfNVdgHL7oYWS2yd3tztr2NZiqP2LFuw3voPW")
     ))
-

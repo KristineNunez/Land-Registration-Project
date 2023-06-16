@@ -2,6 +2,6 @@
 
 ### Author: Six Bombs
 
-### Contract Address: `KT1BuRqYjh8YBbPoztyecFh5QhRL9EaiqP5c`
+### Contract Address: `KT19xPpFu7Mug7LHZL7HFeZNE61Bd7ETPCdZ`
 
 ### Contract Deployment: Ghostnet
